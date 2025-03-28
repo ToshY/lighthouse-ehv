@@ -1,0 +1,39 @@
+version: '3'
+
+includes:
+  backend:
+    taskfile: ./backend
+    dir: ./backend
+    optional: true
+  frontend:
+    taskfile: ./frontend
+    dir: ./frontend
+    optional: true
+
+env:
+  UID:
+    sh: id -u
+  GID:
+    sh: id -g
+
+tasks:
+  default:
+    desc: Show tasks
+    cmds:
+      - task --list-all
+
+  up:
+    desc: Run backend and frontend
+    cmds:
+      - task: backend-up
+      - task: frontend-up
+
+  backend-up:
+    desc: Run backend script for downloading latest unit data
+    cmds:
+      - task: backend:run
+
+  frontend-up:
+    desc: Run fronted Deno Fresh for basic listing in watch mode
+    cmds:
+      - task: frontend:deno:run:watch

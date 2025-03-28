@@ -1,0 +1,90 @@
+version: '3'
+
+env:
+  UID:
+    sh: id -u
+  GID:
+    sh: id -g
+
+tasks:
+  default:
+    desc: Show tasks
+    cmds:
+      - task --list-all
+
+  deno:
+    silent: true
+    vars:
+      DENO_DIR: '{{.d | default "./.cache"}}'
+    cmds:
+      - mkdir -p {{.DENO_DIR}}
+      - docker compose run --rm --no-deps $TTY deno {{.CLI_ARGS | default "-h"}}
+
+  deno:shell:
+    desc: Deno shell
+    cmds:
+      - task deno -- /bin/bash
+
+  deno:info:
+    desc: Deno info
+    cmds:
+      - task deno -- info
+
+  deno:install:
+    desc: Deno install
+    cmds:
+      - task deno -- install {{.CLI_ARGS | default ""}}
+
+  deno:add:
+    desc: Deno add
+    cmds:
+      - task deno -- add {{.CLI_ARGS | default "-h"}}
+
+  deno:remove:
+    desc: Deno remove
+    cmds:
+      - task deno -- remove {{.CLI_ARGS | default "-h"}}
+
+  deno:cache:
+    desc: Deno cache
+    cmds:
+      - task deno -- cache {{.CLI_ARGS | default "-h"}}
+
+  deno:build:
+    desc: Deno build
+    cmds:
+      - task deno -- task build
+
+  deno:run:
+    desc: Deno run
+    cmds:
+      - task deno -- run -A main.ts
+
+  deno:run:watch:
+    desc: Deno run with file changes
+    cmds:
+      - task deno -- run -A --watch dev.ts
+
+  deno:compile:help:
+    desc: Deno compile
+    cmds:
+      - task deno -- compile -h
+
+  deno:compile:
+    desc: Deno compile for linux and windows (x86_64)
+    vars:
+      DENO_OUTPUT: '{{.d | default "./output"}}'
+      DENO_OUTPUT_FILE: '{{.df | default "app"}}'
+      ICON: '{{.i | default "./static/windows.ico"}}'
+    cmds:
+      - mkdir -p {{.DENO_OUTPUT}}
+      - task deno:build
+      - for:
+          matrix:
+            OS: [ "x86_64-pc-windows-msvc", "x86_64-unknown-linux-gnu" ]
+        cmd: |
+            ICON=""
+            if [ "{{.ITEM.OS}}" == "x86_64-pc-windows-msvc" ]; then
+              ICON="--icon {{.ICON}}"
+            fi
+            task deno -- compile --no-check -A --target {{.ITEM.OS}} --output {{.DENO_OUTPUT}}/{{.DENO_OUTPUT_FILE}} --include static --include _fresh --include deno.json $ICON main.ts

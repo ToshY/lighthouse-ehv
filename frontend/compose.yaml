@@ -1,0 +1,16 @@
+services:
+  deno:
+    image: denoland/deno:${DENO_IMAGE_VERSION:-2.2.2}
+    user: "${UID:-10000}:${GID:-10001}"
+    working_dir: /app
+    environment:
+      FRESH_ESBUILD_LOADER: portable
+      DENO_DIR: ${CACHE_DIR:-/deno-dir/.cache}
+      HTTP_PORT: ${HTTP_PORT:-8002}
+    ports:
+      - "${HTTP_PORT:-8002}:${HTTP_PORT:-8002}"
+    network_mode: "host"
+    volumes:
+      - ../data:/data
+      - .:/app
+      - .cache:${CACHE_DIR:-/deno-dir/.cache}

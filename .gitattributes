@@ -1,0 +1,7 @@
+/.github/ export-ignore
+/backend/ export-ignore
+/frontend/ export-ignore
+/.gitattributes export-ignore
+/LICENSE export-ignore
+/README.md export-ignore
+/Taskfile.yml export-ignore
