@@ -5,6 +5,7 @@ with a basic [Deno Fresh](https://fresh.deno.dev/) application for displaying th
 
 ## 👀 Features
 
+- Hourly updated JSON dump available at [toshy.github.io/lighthouse-ehv/units.json](https://toshy.github.io/lighthouse-ehv/units.json).
 - [Releases](https://github.com/ToshY/lighthouse-ehv/releases) are created on an hourly basis, at cron schedule `0 * * * *` (actual workflow execution time may be [delayed](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#schedule)).
   - The release contains an updated [JSON dump](./data/units.json) of the apartment listing from the [Lighthouse API endpoint](https://api.presendoo.app/api/public/projects/51/units).
 - Basic [Deno Fresh](https://fresh.deno.dev/) application for displaying every available unit in a single page.
